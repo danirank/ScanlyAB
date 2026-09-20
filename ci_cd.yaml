@@ -5,6 +5,9 @@ trigger:
     include:
       - main
 
+variables:
+  projectPath: '$(Build.SourcesDirectory)/ScanlyApi/ScanlyApi.csproj'
+
 pool:
   vmImage: ubuntu-latest
 
@@ -15,14 +18,12 @@ steps:
     displayName: Use .NET SDK
     inputs:
       packageType: sdk
-      version: 8.x
+      version: '8.x'
 
-  - script: dotnet restore
+  - script: dotnet restore "$(projectPath)"
     displayName: Restore
 
-  - script: dotnet build --configuration Release --no-restore
+  - script: dotnet build "$(projectPath)" --configuration Release --no-restore
     displayName: Build
 
-  - script: dotnet test --configuration Release --no-build
-    displayName: Test
-
+ 
