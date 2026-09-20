@@ -1,0 +1,27 @@
+name: CI_CD_Github
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'ScanlyApi/**'
+
+
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ScanlyApi/ScanlyApi.csproj
+
+      - name: Build
+        run: dotnet build ScanlyApi/ScanlyApi.csproj --configuration Release --no-restore
