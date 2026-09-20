@@ -1,0 +1,28 @@
+name: CI_CD
+
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+
+  - task: UseDotNet@2
+    displayName: Use .NET SDK
+    inputs:
+      packageType: sdk
+      version: 8.x
+
+  - script: dotnet restore
+    displayName: Restore
+
+  - script: dotnet build --configuration Release --no-restore
+    displayName: Build
+
+  - script: dotnet test --configuration Release --no-build
+    displayName: Test
+
