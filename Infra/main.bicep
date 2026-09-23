@@ -8,7 +8,7 @@ param projectName string = 'scanly'
 var prefix = '${projectName}-${environment}'
 var acrName = replace('${projectName}${environment}acr', '-', '')
 var containerAppName = '${prefix}-api'
-var containerAppEnvironmentName = '${prefix}-cae'
+var containerAppEnvironmentName = '${prefix}-env'
 
 @allowed([
   'Basic'

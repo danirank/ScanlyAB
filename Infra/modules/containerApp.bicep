@@ -47,7 +47,6 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
 
   properties: {
     managedEnvironmentId: containerAppEnvironment.id
-
     configuration: {
       ingress: {
         external: true
