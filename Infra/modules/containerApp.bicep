@@ -27,6 +27,14 @@ param maxReplicas int
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: environmentName
   location: location
+  properties: {
+    workloadProfiles: [
+      {
+        name: 'Consumption'
+        workloadProfileType: 'Consumption'
+      }
+    ]
+  }
 }
 
 resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
