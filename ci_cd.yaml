@@ -1,21 +1,29 @@
-name: CI_CD
-
-trigger:
-  branches:
-    include:
-      - main
+triggers:
+  - main
   paths:
-    include:
-      - ScanlyApi/**
+      - 'ScanlyApi/**'
+      - 'Infra/**'
+
 
 variables:
   projectPath: '$(Build.SourcesDirectory)/ScanlyApi/ScanlyApi.csproj'
+
+  serviceConnection: 'scanly-service-connection'
+  resourceGroup: 'RG-Daniel-Rank-64f115-DotNetCloudDeveloper-VT-Mars-Goteborg'
+
+  acrName: 'scanlystageacr'
+  imageName: 'scanlyapi'
+  imageTag: '$(Build.BuildId)'
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
   - checkout: self
+
+#############
+# Build .Net
+#############
 
   - task: UseDotNet@2
     displayName: Use .NET SDK
@@ -28,3 +36,62 @@ steps:
 
   - script: dotnet build "$(projectPath)" --configuration Release --no-restore
     displayName: Build
+
+##########
+# Deploy infrastructure
+##########
+
+  -task: AzureCLI@2
+    displayName: Deploy infrastructure
+    inputs:
+      azureSubscription: 'scanly-connection'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az deployment group create \
+          --resource-group $(resourceGroup) \
+          --template-file "$(Build.SourcesDirectory)/ScanlyApi/infra/main.bicep" \
+          --parameters acrName=$(acrName)
+          --parameters Infra/stage.bicepparam \
+          
+
+#########
+#Build and psuh Image to ACR
+#########
+
+
+  - task: AzureCLI@2
+    displayName: Build and push image to ACR
+    inputs:
+      azureSubscription: 'scanly-connection'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        # Login mot ACR
+        az acr login --name $(acrName)
+
+        # Build image
+        docker build \
+          -t $(acrName).azurecr.io/$(imageName):$(imageTag) \
+          ScanlyApi/
+
+        # Push image
+        docker push \
+          $(acrName).azurecr.io/$(imageName):$(imageTag)
+
+#########
+#Update Container App
+#########
+
+  - task: AzureCLI@2
+    displayName: Update Container App
+    inputs:
+      azureSubscription: 'scanly-connection'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        az containerapp update \
+          --name scanlyapi \
+          --resource-group $(resourceGroup) \
+          --image $(acrName).azurecr.io/$(imageName):$(imageTag)
+

@@ -1,0 +1,12 @@
+using './main.bicep'
+
+param environment = 'stage'
+param location = 'swedencentral'
+
+param acrSku = 'Basic'
+
+param containerCpu = '0.25'
+param containerMemory = '0.5Gi'
+
+param minReplicas = 0
+param maxReplicas = 1
