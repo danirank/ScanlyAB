@@ -1,10 +1,11 @@
-triggers:
-  - main
+trigger:
+  branches:
+    include:
+      - main
   paths:
-      - 'ScanlyApi/**'
-      - 'Infra/**'
-
-
+    include:
+      - ScanlyApi/**
+      - Infra/**
 variables:
   projectPath: '$(Build.SourcesDirectory)/ScanlyApi/ScanlyApi.csproj'
 
