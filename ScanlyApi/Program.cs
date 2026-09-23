@@ -28,6 +28,9 @@ var storageUrl = Environment.GetEnvironmentVariable("AZURE_STORAGE_URL");
 
 var azureMode  = diEndpoint is not null && storageUrl is not null;
 
+Console.WriteLine($"Storage URL configured: '{storageUrl}'");
+Console.WriteLine($"Storage URL valid: {Uri.TryCreate(storageUrl, UriKind.Absolute, out _)}");
+Console.WriteLine($"Mode: {(azureMode ? "Azure" : "Demo")} (DI endpoint: '{diEndpoint}', DI key: {(diKey is not null ? "set" : "not set")})");
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "Scanly API", Version = "v1" }));
