@@ -48,8 +48,8 @@ steps:
       inlineScript: |
         az deployment group create \
           --resource-group $(resourceGroup) \
-          --template-file "$(Build.SourcesDirectory)/ScanlyApi/infra/main.bicep" \
-          --parameters infra/stage.bicepparam \
+          --template-file "$(Build.SourcesDirectory)/Infra/main.bicep" \
+          --parameters Infra/stage.bicepparam \
           
 
 #########
