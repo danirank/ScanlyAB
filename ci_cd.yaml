@@ -38,7 +38,7 @@ steps:
 
 
 #########
-#Build and psuh Image to ACR
+#Build and push Image to ACR
 #########
 
 
@@ -73,7 +73,7 @@ steps:
       scriptLocation: inlineScript
       inlineScript: |
         az containerapp update \
-          --name scanlyapi \
+          --name scanly-stage-api \
           --resource-group $(resourceGroup) \
           --image $(acrName).azurecr.io/$(imageName):$(imageTag)
 
