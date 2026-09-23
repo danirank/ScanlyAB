@@ -26,27 +26,5 @@ jobs:
       - name: Build
         run: dotnet build ScanlyApi/ScanlyApi.csproj --configuration Release --no-restore
 
-  build-image:
-    runs-on: ubuntu-latest
-    needs: build
-
-    permission:
-      id-token: write
-      contents: read
-
-    steps:
-      - uses: actions/checkout@v4
-      - name: Build Docker image
-        run: | 
-          docker build \
-          -t scanlyapi:${{ github.sha }} \
-          ScanlyApi/
-
-      - name: Log in to Azure with OIDC
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
    
