@@ -4,9 +4,9 @@ trigger:
   branches:
     include:
       - main
-    paths:
-      include:
-        - ScanlyApi/**
+  paths:
+    include:
+      - ScanlyApi/**
 
 variables:
   projectPath: '$(Build.SourcesDirectory)/ScanlyApi/ScanlyApi.csproj'
@@ -28,5 +28,3 @@ steps:
 
   - script: dotnet build "$(projectPath)" --configuration Release --no-restore
     displayName: Build
-
- 
