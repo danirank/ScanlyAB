@@ -35,22 +35,7 @@ steps:
   - script: dotnet build "$(projectPath)" --configuration Release --no-restore
     displayName: Build
 
-##########
-# Deploy infrastructure
-##########
 
-  - task: AzureCLI@2
-    displayName: Deploy infrastructure
-    inputs:
-      azureSubscription: '$(serviceConnection)'
-      scriptType: bash
-      scriptLocation: inlineScript
-      inlineScript: |
-        az deployment group create \
-          --resource-group $(resourceGroup) \
-          --template-file "$(Build.SourcesDirectory)/Infra/main.bicep" \
-          --parameters Infra/stage.bicepparam \
-          
 
 #########
 #Build and psuh Image to ACR

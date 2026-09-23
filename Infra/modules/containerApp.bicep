@@ -8,8 +8,7 @@ param environmentName string
 param location string
 
 
-@description('ACR login server')
-param acrLoginServer string
+
 
 @description('CPU allocation for the container')
 param cpu string
@@ -27,14 +26,7 @@ param maxReplicas int
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2024-03-01' = {
   name: environmentName
   location: location
-  properties: {
-    workloadProfiles: [
-      {
-        name: 'Consumption'
-        workloadProfileType: 'Consumption'
-      }
-    ]
-  }
+  properties: {}
 }
 
 resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
@@ -54,12 +46,7 @@ resource containerApp 'Microsoft.App/containerApps@2024-03-01' = {
         transport: 'auto'
       }
 
-      registries: [
-        {
-          server: acrLoginServer
-          identity: 'system'
-        }
-      ]
+      
     }
 
     template: {

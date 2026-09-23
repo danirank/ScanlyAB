@@ -37,7 +37,6 @@ module containerApp 'modules/containerApp.bicep' = {
     name: containerAppName
     environmentName: containerAppEnvironmentName
     location: location
-    acrLoginServer: acr.outputs.loginServer
     cpu: containerCpu
     memory: containerMemory
     minReplicas: minReplicas
@@ -45,6 +44,14 @@ module containerApp 'modules/containerApp.bicep' = {
   }
 }
 
+module acrRole 'modules/acrRole.bicep' = {
+  name: 'assign-acr-pull'
+  params: {
+    acrName: acrName
+    containerAppName: containerAppName
+    principalId: containerApp.outputs.principalId
+  }
+}
 
 
 output containerAppUrl string = containerApp.outputs.url
