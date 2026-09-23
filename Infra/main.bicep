@@ -22,6 +22,15 @@ param containerMemory string
 param minReplicas int
 param maxReplicas int
 
+
+@allowed([
+  'Standard_LRS'
+  'Standard_GRS'
+  'Standard_ZRS'
+])
+param storageSku string
+var storageAccountName = replace('${projectName}${environment}storage', '-', '')
+
 module acr 'modules/acr.bicep' = {
   name: 'deploy-acr'
   params: {
@@ -53,6 +62,24 @@ module acrRole 'modules/acrRole.bicep' = {
   }
 }
 
+module storage 'modules/storage.bicep' = {
+  name: 'deploy-storage'
+  params: {
+    name: storageAccountName
+    location: location
+    skuName: storageSku
+  }
+}
+
+
+module storageRole 'modules/storageRole.bicep' = {
+  name: 'assign-storage-role'
+  params: {
+    storageAccountName: storageAccountName
+    containerAppName: containerAppName
+    principalId: containerApp.outputs.principalId
+  }
+}
 
 
 output containerAppUrl string = containerApp.outputs.url

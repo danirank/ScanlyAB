@@ -1,5 +1,5 @@
 using './main.bicep'
-
+param storageSku = 'Standard_LRS'
 param environment = 'stage'
 param location = 'swedencentral'
 

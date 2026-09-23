@@ -1,5 +1,5 @@
 using './main.bicep'
-
+param storageSku = 'Standard_ZRS'
 param environment = 'prod'
 param location = 'swedencentral'
 
