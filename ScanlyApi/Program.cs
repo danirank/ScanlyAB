@@ -24,6 +24,9 @@ using System.Text.Json;
 var diEndpoint = Environment.GetEnvironmentVariable("AZURE_DI_ENDPOINT");
 var diKey      = Environment.GetEnvironmentVariable("AZURE_DI_KEY");
 var storageUrl = Environment.GetEnvironmentVariable("AZURE_STORAGE_URL");
+Console.WriteLine($"DI endpoint configured: {!string.IsNullOrEmpty(diEndpoint)}");
+Console.WriteLine($"DI key configured: {!string.IsNullOrEmpty(diKey)}");
+Console.WriteLine($"Storage URL configured: {!string.IsNullOrEmpty(storageUrl)}");
 var azureMode  = diEndpoint is not null && storageUrl is not null;
 
 var builder = WebApplication.CreateBuilder(args);
