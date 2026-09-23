@@ -54,5 +54,6 @@ module acrRole 'modules/acrRole.bicep' = {
 }
 
 
+
 output containerAppUrl string = containerApp.outputs.url
 output acrLoginServer string = acr.outputs.loginServer
