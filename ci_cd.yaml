@@ -49,7 +49,7 @@ steps:
         az deployment group create \
           --resource-group $(resourceGroup) \
           --template-file "$(Build.SourcesDirectory)/ScanlyApi/infra/main.bicep" \
-          --parameters Infra/stage.bicepparam \
+          --parameters infra/stage.bicepparam \
           
 
 #########
