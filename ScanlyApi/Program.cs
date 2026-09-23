@@ -116,11 +116,36 @@ app.Run();
 // Lokal funktion måste ligga FÖRE record-deklarationen i top-level context
 static FakturaResultat ParseFaktura(AnalyzedDocument? doc, string id)
 {
-    if (doc is null) return new(id, "Okänd", 0m, "", "SEK", "fel: tomt svar");
-    string  Get(string k)    => doc.Fields.TryGetValue(k, out var f) ? f.Content ?? "" : "";
-    decimal GetDec(string k) => doc.Fields.TryGetValue(k, out var f) &&
-                                 f.Value?.AsDouble() is double d ? (decimal)d : 0m;
-    return new(id, Get("VendorName"), GetDec("InvoiceTotal"), Get("DueDate"), "SEK", "klar");
+    if (doc is null)
+        return new(id, "Okänd", 0m, "", "SEK", "fel: tomt svar");
+
+    string Get(string key) =>
+        doc.Fields.TryGetValue(key, out var field)
+            ? field.Content ?? ""
+            : "";
+
+    decimal GetCurrency(string key)
+    {
+        if (!doc.Fields.TryGetValue(key, out var field))
+            return 0m;
+
+        if (field.FieldType == DocumentFieldType.Currency)
+        {
+            var currency = field.Value.AsCurrency();
+            return (decimal)currency.Amount;
+        }
+
+        return 0m;
+    }
+
+    return new FakturaResultat(
+        id,
+        Get("VendorName"),
+        GetCurrency("InvoiceTotal"),
+        Get("DueDate"),
+        "SEK",
+        "klar"
+    );
 }
 
 // ── Modeller ─────────────────────────────────────────────────────
