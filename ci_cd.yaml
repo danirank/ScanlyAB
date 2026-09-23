@@ -6,7 +6,7 @@ trigger:
 variables:
   projectPath: '$(Build.SourcesDirectory)/ScanlyApi/ScanlyApi.csproj'
 
-  serviceConnection: 'scanly-service-connection'
+  serviceConnection: 'scanly-connection'
   resourceGroup: 'RG-Daniel-Rank-64f115-DotNetCloudDeveloper-VT-Mars-Goteborg'
 
   acrName: 'scanlystageacr'
@@ -39,17 +39,17 @@ steps:
 # Deploy infrastructure
 ##########
 
-  -task: AzureCLI@2
+  - task: AzureCLI@2
     displayName: Deploy infrastructure
     inputs:
-      azureSubscription: 'scanly-connection'
+      azureSubscription: '$(serviceConnection)'
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
         az deployment group create \
           --resource-group $(resourceGroup) \
           --template-file "$(Build.SourcesDirectory)/ScanlyApi/infra/main.bicep" \
-          --parameters acrName=$(acrName)
+          --parameters acrName=$(acrName) \
           --parameters Infra/stage.bicepparam \
           
 
@@ -61,7 +61,7 @@ steps:
   - task: AzureCLI@2
     displayName: Build and push image to ACR
     inputs:
-      azureSubscription: 'scanly-connection'
+      azureSubscription: '$(serviceConnection)'
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
@@ -84,7 +84,7 @@ steps:
   - task: AzureCLI@2
     displayName: Update Container App
     inputs:
-      azureSubscription: 'scanly-connection'
+      azureSubscription: '$(serviceConnection)'
       scriptType: bash
       scriptLocation: inlineScript
       inlineScript: |
