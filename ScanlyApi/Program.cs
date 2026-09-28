@@ -29,12 +29,12 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 var diEndpoint = Environment.GetEnvironmentVariable("AZURE_DI_ENDPOINT");
 var diKey      = Environment.GetEnvironmentVariable("AZURE_DI_KEY");
 var storageUrl = Environment.GetEnvironmentVariable("AZURE_STORAGE_URL");
-var aiConnStr  = Environment.GetEnvironmentVariable("AI-CONNECTIONSTRING");
+var aiConnStr  = Environment.GetEnvironmentVariable("AI_CONNECTION_STRING");
 
 
 
 var azureMode  = diEndpoint is not null && storageUrl is not null;
-var insights  = aiConnStr is not null;
+var insights  = !string.IsNullOrWhiteSpace(aiConnStr);
 
 Console.WriteLine($"Storage URL configured: '{storageUrl}'");
 Console.WriteLine($"Storage URL valid: {Uri.TryCreate(storageUrl, UriKind.Absolute, out _)}");
@@ -43,7 +43,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 
-if (!string.IsNullOrWhiteSpace(aiConnStr))
+if (insights)
 {
     builder.Services.AddOpenTelemetry().UseAzureMonitor(options =>
     {
