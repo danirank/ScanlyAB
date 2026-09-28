@@ -29,7 +29,7 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 var diEndpoint = Environment.GetEnvironmentVariable("AZURE_DI_ENDPOINT");
 var diKey      = Environment.GetEnvironmentVariable("AZURE_DI_KEY");
 var storageUrl = Environment.GetEnvironmentVariable("AZURE_STORAGE_URL");
-var aiConnStr  = Environment.GetEnvironmentVariable("AI_CONNECTIONSTRING");
+var aiConnStr  = Environment.GetEnvironmentVariable("AI-CONNECTIONSTRING");
 
 
 
