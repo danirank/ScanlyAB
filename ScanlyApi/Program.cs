@@ -29,20 +29,29 @@ using Azure.Monitor.OpenTelemetry.AspNetCore;
 var diEndpoint = Environment.GetEnvironmentVariable("AZURE_DI_ENDPOINT");
 var diKey      = Environment.GetEnvironmentVariable("AZURE_DI_KEY");
 var storageUrl = Environment.GetEnvironmentVariable("AZURE_STORAGE_URL");
+var aiConnStr  = Environment.GetEnvironmentVariable("AI_CONNECTIONSTRING");
 
 
 
 var azureMode  = diEndpoint is not null && storageUrl is not null;
+var insights  = aiConnStr is not null;
 
 Console.WriteLine($"Storage URL configured: '{storageUrl}'");
 Console.WriteLine($"Storage URL valid: {Uri.TryCreate(storageUrl, UriKind.Absolute, out _)}");
 Console.WriteLine($"Mode: {(azureMode ? "Azure" : "Demo")} (DI endpoint: '{diEndpoint}', DI key: {(diKey is not null ? "set" : "not set")})");
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenTelemetry().UseAzureMonitor(c =>
+if (insights)
 {
-    c.ConnectionString = Environment.GetEnvironmentVariable("AI_CONNECTIONSTRING");
-});
+   
+    builder.Services.AddOpenTelemetry().UseAzureMonitor(c =>
+    {
+        c.ConnectionString = Environment.GetEnvironmentVariable("AI_CONNECTIONSTRING");
+    });
+    Console.WriteLine($"OpenTelemetry configured: '{aiConnStr}'");
+}
+Console.WriteLine($"No insights configured");
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "Scanly API", Version = "v1" }));
 var app = builder.Build();
