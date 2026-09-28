@@ -41,16 +41,21 @@ Console.WriteLine($"Storage URL valid: {Uri.TryCreate(storageUrl, UriKind.Absolu
 Console.WriteLine($"Mode: {(azureMode ? "Azure" : "Demo")} (DI endpoint: '{diEndpoint}', DI key: {(diKey is not null ? "set" : "not set")})");
 var builder = WebApplication.CreateBuilder(args);
 
-if (insights)
+
+
+if (!string.IsNullOrWhiteSpace(aiConnStr))
 {
-   
-    builder.Services.AddOpenTelemetry().UseAzureMonitor(c =>
+    builder.Services.AddOpenTelemetry().UseAzureMonitor(options =>
     {
-        c.ConnectionString = Environment.GetEnvironmentVariable("AI_CONNECTIONSTRING");
+        options.ConnectionString = aiConnStr;
     });
-    Console.WriteLine($"OpenTelemetry configured: '{aiConnStr}'");
+
+    Console.WriteLine("Application Insights configured");
 }
-Console.WriteLine($"No insights configured");
+else
+{
+    Console.WriteLine("Application Insights not configured");
+}
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "Scanly API", Version = "v1" }));
