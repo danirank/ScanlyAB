@@ -77,3 +77,23 @@ steps:
           --resource-group $(resourceGroup) \
           --image $(acrName).azurecr.io/$(imageName):$(imageTag)
 
+  - task: AzureCLI@2
+    displayName: Health check
+    inputs:
+      azureSubscription: '$(serviceConnection)'
+      scriptType: bash
+      scriptLocation: inlineScript
+      inlineScript: |
+        # Get the URL of the Container App
+        CONTAINER_APP_URL=$(az containerapp show \
+          --name scanly-stage-api \
+          --resource-group $(resourceGroup) \
+          --query properties.configuration.ingress.fqdn \
+          --output tsv)
+
+        # Perform health check
+        echo "Running health check..."
+        curl --fail \
+          --retry 5 \
+          --retry-delay 5 \
+          "${CONTAINER_APP_URL}/health"
