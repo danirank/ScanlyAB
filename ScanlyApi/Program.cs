@@ -20,10 +20,16 @@ using Azure.AI.FormRecognizer.DocumentAnalysis;
 using Azure.Identity;
 using Azure.Storage.Blobs;
 using System.Text.Json;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
+
+
+
+
 
 var diEndpoint = Environment.GetEnvironmentVariable("AZURE_DI_ENDPOINT");
 var diKey      = Environment.GetEnvironmentVariable("AZURE_DI_KEY");
 var storageUrl = Environment.GetEnvironmentVariable("AZURE_STORAGE_URL");
+
 
 
 var azureMode  = diEndpoint is not null && storageUrl is not null;
@@ -32,6 +38,11 @@ Console.WriteLine($"Storage URL configured: '{storageUrl}'");
 Console.WriteLine($"Storage URL valid: {Uri.TryCreate(storageUrl, UriKind.Absolute, out _)}");
 Console.WriteLine($"Mode: {(azureMode ? "Azure" : "Demo")} (DI endpoint: '{diEndpoint}', DI key: {(diKey is not null ? "set" : "not set")})");
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddOpenTelemetry().UseAzureMonitor(c =>
+{
+    c.ConnectionString = Environment.GetEnvironmentVariable("AI_CONNECTIONSTRING");
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "Scanly API", Version = "v1" }));
 var app = builder.Build();
