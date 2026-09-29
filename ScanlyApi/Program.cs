@@ -21,6 +21,7 @@ using Azure.Identity;
 using Azure.Storage.Blobs;
 using System.Text.Json;
 using Azure.Monitor.OpenTelemetry.AspNetCore;
+using Scalar.AspNetCore;
 
 
 
@@ -57,11 +58,16 @@ else
     Console.WriteLine("Application Insights not configured");
 }
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "Scanly API", Version = "v1" }));
+// builder.Services.AddEndpointsApiExplorer();
+// builder.Services.AddSwaggerGen(o => o.SwaggerDoc("v1", new() { Title = "Scanly API", Version = "v1" }));
+builder.Services.AddOpenApi();
+
 var app = builder.Build();
-app.UseSwagger();
-app.UseSwaggerUI();
+app.MapOpenApi();
+app.MapScalarApiReference();
+// app.UseSwagger();
+// app.UseSwaggerUI();
+
 
 // Azure-klienter — aktiveras automatiskt när miljövariablerna är satta
 DocumentAnalysisClient? diClient = null;
