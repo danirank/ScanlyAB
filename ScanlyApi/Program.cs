@@ -87,7 +87,7 @@ var fakturor = new Dictionary<string, FakturaResultat>();
 
 // ── GET /health ──────────────────────────────────────────────────
 app.MapGet("/health", () => new { status = "ok", mode = azureMode ? "azure" : "demo" })
-   .WithTags("Status").Produces<object>(200).WithSummary("Kontrollera att API:et är igång - hälsokontroll");
+   .WithTags("Status").Produces<object>(200).WithSummary("Kontrollera att API:et är igång - demo");
 
 // ── POST /invoices ───────────────────────────────────────────────
 app.MapPost("/invoices", async (IFormFile req) =>
