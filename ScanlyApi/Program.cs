@@ -86,7 +86,7 @@ if (azureMode)
 var fakturor = new Dictionary<string, FakturaResultat>();
 
 // ── GET /health ──────────────────────────────────────────────────
-app.MapGet("/health", () => new { status = "ok", mode = azureMode ? "azure" : "demo" })
+app.MapGet("/health", () => new { status = "ok", mode = azureMode ? "azure" : "livedemo" })
    .WithTags("Status").Produces<object>(200).WithSummary("Kontrollera att API:et är igång - demo");
 
 // ── POST /invoices ───────────────────────────────────────────────
